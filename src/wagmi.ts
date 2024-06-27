@@ -1,7 +1,6 @@
 "use client";
 import { http, createConfig } from "wagmi";
-import { baseSepolia } from "wagmi/chains";
-// import { coinbaseWallet } from "wagmi/connectors";
+import { base } from "wagmi/chains";
 import { coinbaseWallet } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 
@@ -17,16 +16,16 @@ const connectors = connectorsForWallets(
   ],
   {
     appName: "Sweep",
-    projectId: "YOUR_PROJECT_ID",
+    projectId: process.env.NEXT_PUBLIC_PROJECT_ID ?? "",
   }
 );
 
 export function getConfig() {
   return createConfig({
-    chains: [baseSepolia],
+    chains: [base],
     connectors,
     transports: {
-      [baseSepolia.id]: http(),
+      [base.id]: http(),
     },
   });
 }
