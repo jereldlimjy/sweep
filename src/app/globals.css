@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'SFRounded';
+  src: url('/fonts/SF-Pro-Rounded-Regular.otf');
+}
+
+@font-face {
+  font-family: 'SFRounded-medium';
+  src: url('/fonts/SF-Pro-Rounded-Medium.otf');
+}
+
+* {
+  box-sizing: border-box;
+}
