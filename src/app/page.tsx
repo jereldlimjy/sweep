@@ -107,7 +107,7 @@ function App() {
               routeSummary: route.data.routeSummary,
               sender: address,
               recipient: address,
-              slippageTolerance: 10, // 0.1%
+              slippageTolerance: 100, // 1%
             }),
           }
         );
@@ -116,39 +116,36 @@ function App() {
 
       const callsArray = await Promise.all(callsPromises);
 
-      // Approve calldata
+      // Approve calls
       const approveCalls = successfulRoutes.map((route) => {
-        const amount = route.data.amountIn;
+        const amount = route.data.routeSummary.amountIn;
+        const routerAddress = route.data.routerAddress;
 
         // Construct calldata
         const approveCalldata = encodeFunctionData({
           abi: erc20Abi,
           functionName: "approve",
-          args: [address as `0x${string}`, amount],
+          args: [routerAddress as `0x${string}`, amount],
         });
 
-        return approveCalldata;
+        return {
+          to: route.data.routeSummary.tokenIn as `0x${string}`,
+          data: approveCalldata,
+          value: BigInt(0),
+        };
       });
 
-      console.log(approveCalls);
+      // Swap calls
+      const swapCalls = callsArray.map((call) => {
+        return {
+          to: call.data.routerAddress as `0x${string}`,
+          data: call.data.data as `0x${string}`,
+          value: BigInt(0),
+        };
+      });
 
       sendCalls({
-        calls: callsArray
-          .map((call, idx) => {
-            return [
-              {
-                to: call.data.routerAddress as `0x${string}`,
-                data: approveCalls[idx],
-                value: BigInt(0),
-              },
-              {
-                to: call.data.routerAddress as `0x${string}`,
-                data: call.data.data as `0x${string}`,
-                value: BigInt(0),
-              },
-            ];
-          })
-          .flat(),
+        calls: [...approveCalls, ...swapCalls],
       });
     } catch (err) {}
   };
