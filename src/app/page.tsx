@@ -29,6 +29,7 @@ interface SelectedTokens {
 function App() {
   const { address } = useAccount();
   const { sendCalls, isPending } = useSendCalls();
+  const [pendingRefresh, setPendingRefresh] = useState(false);
   const [tokens, setTokens] = useState<any[]>([]);
   const [selectedTokens, setSelectedTokens] = useState<SelectedTokens>({});
   const [loading, setLoading] = useState(false);
@@ -147,7 +148,11 @@ function App() {
         },
         {
           onSuccess(data, variables, context) {
-            fetchTokens();
+            setPendingRefresh(true);
+            setTimeout(() => {
+              fetchTokens();
+              setPendingRefresh(false);
+            }, 5000);
           },
         }
       );
@@ -220,7 +225,7 @@ function App() {
             onClick={handleSweep}
             disabled={Object.keys(selectedTokens).length === 0 || isPending}
           >
-            {isPending ? (
+            {isPending || pendingRefresh ? (
               <div className="flex items-center">
                 <svg
                   aria-hidden="true"
