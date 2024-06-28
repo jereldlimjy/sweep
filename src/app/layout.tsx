@@ -15,7 +15,7 @@ export default function RootLayout(props: { children: ReactNode }) {
       <body className="font-sfrounded">
         <Providers>
           <Navbar />
-          {props.children}
+          <div className="my-8">{props.children}</div>
         </Providers>
       </body>
     </html>

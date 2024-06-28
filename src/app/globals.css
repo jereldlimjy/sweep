@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number'] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield !important;
+  }
+}
+
 @font-face {
   font-family: 'SFRounded';
   src: url('/fonts/SF-Pro-Rounded-Regular.otf');
