@@ -19,7 +19,7 @@ const getTokenBalances = async (address: string) => {
       }
 
       const response = await fetch(
-        `https://deep-index.moralis.io/api/v2.2/wallets/0x96F3A28836454108f542D8Be888625375032aBD5/tokens?${queryParams.toString()}`,
+        `https://deep-index.moralis.io/api/v2.2/wallets/${address}/tokens?${queryParams.toString()}`,
         {
           headers: {
             "X-API-Key": process.env.NEXT_PUBLIC_MORALIS_API_KEY ?? "",

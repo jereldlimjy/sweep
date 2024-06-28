@@ -126,8 +126,9 @@ function App() {
             ))}
           </ul>
           <button
-            className="mt-4 btn rounded-xl font-sfrounded-medium tracking-wide hover:text-gray-50 hover:bg-[#0e76fd] hover:scale-105"
+            className="mt-4 btn rounded-xl px-4 py-2 bg-gray-200 font-sfrounded-medium tracking-wide enabled:hover:text-gray-50 enabled:hover:bg-[#0e76fd] enabled:hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSweep}
+            disabled={Object.keys(selectedTokens).length === 0}
           >
             Sweep to ETH
           </button>

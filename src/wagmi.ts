@@ -27,6 +27,7 @@ export function getConfig() {
     transports: {
       [base.id]: http(),
     },
+    ssr: true,
   });
 }
 
