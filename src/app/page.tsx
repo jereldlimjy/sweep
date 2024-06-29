@@ -47,6 +47,7 @@ function App() {
 
   useEffect(() => {
     fetchTokens();
+    setSelectedTokens({});
   }, [address]);
 
   const handleTokenSelect = (
