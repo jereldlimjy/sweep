@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { formatUnits, parseUnits, erc20Abi, encodeFunctionData } from "viem";
@@ -166,59 +165,67 @@ function App() {
       ) : tokens.length > 0 ? (
         <>
           <ul className="space-y-3">
-            {tokens.map((token) => (
-              <li key={token.token_address}>
-                <div className="flex items-center">
-                  {/* Disable if price is 0 */}
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      onChange={(e) =>
-                        handleTokenSelect(
-                          token.token_address,
-                          e.target.checked,
-                          formatUnits(token.balance, token.decimals),
-                          token.decimals
-                        )
-                      }
-                      disabled={parseFloat(token.usdPrice) === 0}
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:bg-[#3e91fd] peer-checked:border-[#3e91fd] after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-disabled:opacity-50 peer-disabled:cursor-not-allowed" />
-                  </label>
-                  <span className="ml-3.5">
-                    {formatUnits(token.balance, token.decimals)}
-                  </span>
-                  <span className="ml-2 font-sfrounded-medium">
-                    {token.symbol}
-                  </span>
-                  <span className="ml-2">
-                    (worth{" "}
-                    {formatCurrency(
-                      parseFloat(token.usdPrice) * token.balance_formatted,
-                      "USD"
+            {tokens
+              .sort(
+                (a, b) =>
+                  parseFloat(b.usdPrice) * b.balance_formatted -
+                  parseFloat(a.usdPrice) * a.balance_formatted
+              )
+              .map((token) => (
+                <li key={token.token_address}>
+                  <div className="flex items-center">
+                    {/* Disable if price is 0 */}
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        onChange={(e) =>
+                          handleTokenSelect(
+                            token.token_address,
+                            e.target.checked,
+                            formatUnits(token.balance, token.decimals),
+                            token.decimals
+                          )
+                        }
+                        disabled={parseFloat(token.usdPrice) === 0}
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:bg-[#3e91fd] peer-checked:border-[#3e91fd] after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-disabled:opacity-50 peer-disabled:cursor-not-allowed" />
+                    </label>
+                    <span className="ml-3.5">
+                      {formatUnits(token.balance, token.decimals)}
+                    </span>
+                    <span className="ml-2 font-sfrounded-medium">
+                      {token.symbol}
+                    </span>
+                    <span className="ml-2">
+                      (worth{" "}
+                      {formatCurrency(
+                        parseFloat(token.usdPrice) * token.balance_formatted,
+                        "USD"
+                      )}
+                      )
+                    </span>
+                    {selectedTokens[token.token_address] && (
+                      <input
+                        className="ml-4 border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="number"
+                        placeholder="Amount"
+                        onChange={(e) =>
+                          handleTokenSelect(
+                            token.token_address,
+                            true,
+                            e.target.value,
+                            token.decimals
+                          )
+                        }
+                        value={
+                          selectedTokens[token.token_address].amount ?? "0"
+                        }
+                      />
                     )}
-                    )
-                  </span>
-                  {selectedTokens[token.token_address] && (
-                    <input
-                      className="ml-4 border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      type="number"
-                      placeholder="Amount"
-                      onChange={(e) =>
-                        handleTokenSelect(
-                          token.token_address,
-                          true,
-                          e.target.value,
-                          token.decimals
-                        )
-                      }
-                      value={selectedTokens[token.token_address].amount ?? "0"}
-                    />
-                  )}
-                </div>
-              </li>
-            ))}
+                  </div>
+                </li>
+              ))}
           </ul>
           <button
             className="mt-4 btn rounded-xl px-4 py-2 bg-gray-200 font-sfrounded-medium tracking-wide enabled:hover:text-gray-50 enabled:hover:bg-[#0e76fd] enabled:hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
